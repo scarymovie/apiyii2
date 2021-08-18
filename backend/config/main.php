@@ -1,4 +1,7 @@
 <?php
+
+use common\models\User;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -45,6 +48,17 @@ return [
             ],
         ],
 
+    ],
+    'as access' => [
+        'class' => 'yii\filters\AccessControl',
+        'rules' => [
+            [
+                'allow' => true,
+                'matchCallback' => function ($rule, $action) {
+                    return Yii::$app->user->identity->is_admin == 2;
+                }
+            ],
+        ]
     ],
     'params' => $params,
 ];
