@@ -59,7 +59,12 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-            ['role', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
+            ['is_admin', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
+            [['username'],'required'],
+            [['auth_key'],'required'],
+            [['password_hash'],'required'],
+            [['email'],'required'],
+
         ];
     }
 

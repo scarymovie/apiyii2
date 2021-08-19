@@ -48,6 +48,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 ['class'=>UrlRule::class,'controller'=>'post']
+
             ],
         ],
 
