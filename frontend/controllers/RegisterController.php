@@ -22,11 +22,10 @@ class RegisterController extends Controller
         $user->password = \Yii::$app->security->generatePasswordHash($user->password_hash);
         $user->email = \Yii::$app->request->post('email');
         $user->generateEmailVerificationToken();
-        $user->generateAccessToken();
         $user->generateAuthKey();
         $user->created_at = $date->getTimestamp();
         $user->updated_at = $date->getTimestamp();
         $user->save();
-        return \Opis\Closure\serialize( $user->access_token);
+        return $user;
     }
 }

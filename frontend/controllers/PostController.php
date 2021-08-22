@@ -14,38 +14,34 @@ class PostController extends ActiveController
 {
 public $modelClass = Post::class;
 
-public function behaviors()
-{
-    $behaviors = parent::behaviors();
-    $behaviors['authenticator']['only'] = ['create','update','delete'];
-    /*    $behaviors['authenticator']['authMethods'] = [
-            HttpBearerAuth::class
-        ];*/
-    $behaviors['authenticator'] = [
-        'class' => HttpBasicAuth::class,
-        'auth' => function($username,$password){
-            if ($user = User::find()->where(['username'=>$username,'password'=>$password])->one() and
-                $user->validatePassword($password)){
-                return $user->access_token;
-            }
-            return null;
-        }
-    ];
-    return $behaviors;
+/*    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBasicAuth::class
+        ];
+    }*/
 
-}
+    public function actionLogin()
+    {
+        $username = \Yii::$app->request->post('username');
+        $password = \Yii::$app->request->post('password');
 
+        $user = User::find()->where(['username' => $username])->one() and !empty($password)
+        and $user->validatePassword($password);
 
-    /**
-     * @param string $action
-     * @param Post $model
-     * @param array $params
-     * @throws ForbiddenHttpException
-     */
-    public function checkAccess($action, $model = null, $params = [])
-{
-    if (in_array($action,['update','delete'])&& $model->created_by !==\Yii::$app->user->id){
-        throw new ForbiddenHttpException("У вас нет доступа");
+        $user->generateAccessToken();
+        $user->save();
+
+        return $user->access_token;
     }
-}
+
+    public function actionView(){
+
+        $userId = \Yii::$app->user->id;
+
+        $post = Post::find('title')->where(['created_by' => $userId])->one();
+
+        return $post;
+    }
 }
