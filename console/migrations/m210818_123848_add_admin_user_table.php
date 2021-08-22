@@ -12,8 +12,9 @@ class m210818_123848_add_admin_user_table extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%user}}','is_admin',
-        $this->string(512)->after('username')->defaultValue(1));
+        $this->addColumn('{{%user}}', 'is_admin', $this->string(512)
+            ->after('username')
+            ->defaultValue(1));
     }
 
     /**

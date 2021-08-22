@@ -13,7 +13,8 @@ class RegisterController extends Controller
 {
     public $modelClass = User::class;
 
-    public function actionSignup(){
+    public function actionSignup()
+    {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $date = new DateTime();
         $user = new User();

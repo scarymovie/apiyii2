@@ -15,7 +15,7 @@ class m210816_204500_create_post_table extends Migration
         $this->createTable('{{%post}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string(512),
-            'body' => 'LONGTEXT',
+            'body' => $this->string(512),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'created_by' => $this->integer()
@@ -29,7 +29,7 @@ class m210816_204500_create_post_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('FK_post_user_created_by','{{$post}}');
+        $this->dropForeignKey('FK_post_user_created_by', '{{$post}}');
         $this->dropTable('{{%posts}}');
     }
 }

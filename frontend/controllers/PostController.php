@@ -12,15 +12,15 @@ use yii\web\ForbiddenHttpException;
 
 class PostController extends ActiveController
 {
-public $modelClass = Post::class;
+    public $modelClass = Post::class;
 
-/*    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBasicAuth::class
-        ];
-    }*/
+    /*    public function behaviors()
+        {
+            $behaviors = parent::behaviors();
+            $behaviors['authenticator'] = [
+                'class' => HttpBasicAuth::class
+            ];
+        }*/
 
     public function actionLogin()
     {
@@ -36,7 +36,8 @@ public $modelClass = Post::class;
         return $user->access_token;
     }
 
-    public function actionView(){
+    public function actionView()
+    {
 
         $userId = \Yii::$app->user->id;
 

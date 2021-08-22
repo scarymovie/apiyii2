@@ -52,11 +52,9 @@ class User extends BaseUser implements IdentityInterface
     }
 
 
-
     public static function isUserAdmin($username)
     {
-        if (static::findOne(['username' => $username, 'is_admin' => self::ROLE_ADMIN]))
-        {
+        if (static::findOne(['username' => $username, 'is_admin' => self::ROLE_ADMIN])) {
             return true;
         } else {
             return false;
@@ -76,7 +74,7 @@ class User extends BaseUser implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['access_token'=>$token,'status'=>self::STATUS_ACTIVE]);
+        return static::findOne(['access_token' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -114,7 +112,8 @@ class User extends BaseUser implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token) {
+    public static function findByVerificationToken($token)
+    {
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
@@ -133,7 +132,7 @@ class User extends BaseUser implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
