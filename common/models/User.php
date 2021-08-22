@@ -24,7 +24,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends BaseUser implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
@@ -51,22 +51,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-            ['is_admin', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
-            [['username'],'required'],
-            [['auth_key'],'required'],
-            [['password_hash'],'required'],
-            [['email'],'required'],
 
-        ];
-    }
 
     public static function isUserAdmin($username)
     {

@@ -18,16 +18,8 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property User $createdBy
  */
-class Post extends \yii\db\ActiveRecord
+class Post extends BasePost
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return '{{%post}}';
-    }
-
     public function behaviors()
     {
         return [
@@ -37,53 +29,5 @@ class Post extends \yii\db\ActiveRecord
                 'updatedByAttribute' => false
             ]
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['title','body'],'required'],
-            [['body'], 'string'],
-            [['created_at', 'updated_at', 'created_by'], 'integer'],
-            [['title'], 'string', 'max' => 512],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'body' => 'Body',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-        ];
-    }
-
-    /**
-     * Gets query for [[CreatedBy]].
-     *
-     * @return \yii\db\ActiveQuery|\common\models\query\UserQuery
-     */
-    public function getCreatedBy()
-    {
-        return $this->hasOne(User::className(), ['id' => 'created_by']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \common\models\query\PostQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\query\PostQuery(get_called_class());
     }
 }

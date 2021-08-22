@@ -18,9 +18,7 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
-            'parsers' =>[
-                'application/json'=>JsonParser::class]
-        ],
+            'parsers' =>['application/json'=>JsonParser::class]],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -47,7 +45,6 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class'=>UrlRule::class,'controller'=>'post']
 
             ],
         ],
