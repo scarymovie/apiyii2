@@ -4,45 +4,26 @@ namespace frontend\controllers;
 
 use common\models\Post;
 use common\models\User;
-use yii\filters\auth\CompositeAuth;
-use yii\filters\auth\HttpBasicAuth;
-use yii\filters\auth\HttpBearerAuth;
-use yii\rest\ActiveController;
-use yii\web\ForbiddenHttpException;
+use Yii;
+use yii\web\Controller;
+use yii\db\ActiveQuery;
 
-class PostController extends ActiveController
+class PostController extends Controller
 {
-    public $modelClass = Post::class;
 
-    /*    public function behaviors()
-        {
-            $behaviors = parent::behaviors();
-            $behaviors['authenticator'] = [
-                'class' => HttpBasicAuth::class
-            ];
-        }*/
-
-    public function actionLogin()
+    public function actionMyPosts()
     {
-        $username = \Yii::$app->request->post('username');
-        $password = \Yii::$app->request->post('password');
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $user = new User();
+        $user = $user->findIdentityByAccessToken(Yii::$app->request->get('access_token'), $type = null);
+        $userId = $user->id;
+        $post = Post::find()->where(['created_by' => $userId]);
+        //$serialized_array=serialize($post);
+        /*var_dump($serialized_array);*/
 
-        $user = User::find()->where(['username' => $username])->one() and !empty($password)
-        and $user->validatePassword($password);
 
-        $user->generateAccessToken();
-        $user->save();
-
-        return $user->access_token;
-    }
-
-    public function actionView()
-    {
-
-        $userId = \Yii::$app->user->id;
-
-        $post = Post::find('title')->where(['created_by' => $userId])->one();
-
-        return $post;
+        foreach ($post->each() as $myPost) {
+            echo $myPost->title;
+        }
     }
 }
