@@ -1,11 +1,11 @@
 <?php
 
-namespace common\models\query;
+namespace common\models;
 
 /**
- * This is the ActiveQuery class for [[\common\models\Post]].
+ * This is the ActiveQuery class for [[Post]].
  *
- * @see \common\models\Post
+ * @see Post
  */
 class PostQuery extends \yii\db\ActiveQuery
 {
@@ -16,7 +16,7 @@ class PostQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \common\models\Post[]|array
+     * @return Post[]|array
      */
     public function all($db = null)
     {
@@ -25,10 +25,16 @@ class PostQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \common\models\Post|array|null
+     * @return Post|array|null
      */
     public function one($db = null)
     {
         return parent::one($db);
     }
+
+
+/*    public function each($batchSize = 100, $db = null): \yii\db\BatchQueryResult
+    {
+        return parent::each($db);
+    }*/
 }

@@ -2,11 +2,14 @@
 
 namespace frontend\controllers;
 
+use Cassandra\Date;
 use common\models\Post;
+use common\models\BasePost;
 use common\models\User;
+use DateTime;
 use Yii;
 use yii\web\Controller;
-use yii\db\ActiveQuery;
+use yii\db\Query;
 
 class PostController extends Controller
 {
@@ -17,13 +20,49 @@ class PostController extends Controller
         $user = new User();
         $user = $user->findIdentityByAccessToken(Yii::$app->request->get('access_token'), $type = null);
         $userId = $user->id;
-        $post = Post::find()->where(['created_by' => $userId]);
-        //$serialized_array=serialize($post);
-        /*var_dump($serialized_array);*/
+        $postQuery = Post::find()->where(['created_by' => $userId])->limit(10)->offset(0);
 
+        $result = [];
 
-        foreach ($post->each() as $myPost) {
-            echo $myPost->title;
+        foreach ($postQuery->each() as $post) {
+            $result[] = $post->serializeToArray();
         }
+
+        return $result;
+
+    }
+
+    public function actionCreate()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $date = new DateTime();
+        $post = new Post();
+        $user = new User();
+        $post->load(\Yii::$app->request->post(), '');
+        $user = $user->findIdentityByAccessToken(Yii::$app->request->post('access_token'), $type = null);
+        $userId = $user->id;
+        $post->created_by = $userId;
+        $post->created_at = $date->getTimestamp();
+        $post->updated_at = $date->getTimestamp();
+        $post->save();
+
+        return $post->serializeToArray();
+
+    }
+
+    public function actionListPost()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $postQuery = Post::find()->limit(10)->offset(0);
+
+        $result = [];
+
+        foreach ($postQuery->each() as $post)
+        {
+            $result[] = $post->serializeToArray();
+        }
+
+        return $result;
+
     }
 }

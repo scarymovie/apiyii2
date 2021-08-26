@@ -18,7 +18,8 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
-            'parsers' => ['application/json' => JsonParser::class]],
+            'parsers' => ['application/json' => JsonParser::class],
+            'enableCsrfValidation' => false],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

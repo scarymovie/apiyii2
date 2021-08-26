@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%post}}".
+ * This is the model class for table "post".
  *
  * @property int $id
  * @property string|null $title
@@ -23,7 +23,7 @@ class BasePost extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%post}}';
+        return 'post';
     }
 
     /**
@@ -57,19 +57,21 @@ class BasePost extends \yii\db\ActiveRecord
     /**
      * Gets query for [[CreatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\common\models\query\UserQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getCreatedBy()
     {
         return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return \common\models\query\BasePostQuery the active query used by this AR class.
-     */
-    public static function find()
+    public function serializeToArray()
     {
-        return new \common\models\query\BasePostQuery(get_called_class());
+        $post = new Post();
+        $serializedData = [];
+        $serializedData['postId'] = $post->id;
+        $serializedData['title'] = $post->title;
+        $serializedData['created_by'] = $post->created_by;
+
+        return $serializedData;
     }
 }

@@ -1,12 +1,10 @@
 <?php
 
 namespace common\models\query;
+use common\models\BasePost;
+use common\models\Post;
 
-/**
- * This is the ActiveQuery class for [[\common\models\BasePost]].
- *
- * @see \common\models\BasePost
- */
+
 class BasePostQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
@@ -31,4 +29,6 @@ class BasePostQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+
 }
