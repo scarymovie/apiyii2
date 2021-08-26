@@ -223,4 +223,30 @@ class User extends BaseUser implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public function serializeToArray()
+    {
+        $serializedData = [];
+        $serializedData['userId'] = $this->id;
+        $serializedData['username'] = $this->username;
+        $serializedData['email'] = $this->email;
+        $serializedData['updated_at'] = $this->updated_at;
+
+        return $serializedData;
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        if (empty($this->created_at) && (empty($this->updated_at)) && $insert) {
+            $this->created_at = time();
+            $this->updated_at = time();
+        }
+        $this->updated_at = time();
+        $this->created_at = time();
+        return true;
+
+    }
 }

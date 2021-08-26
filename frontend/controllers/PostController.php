@@ -42,8 +42,7 @@ class PostController extends Controller
         $user = $user->findIdentityByAccessToken(Yii::$app->request->post('access_token'), $type = null);
         $userId = $user->id;
         $post->created_by = $userId;
-        $post->created_at = $date->getTimestamp();
-        $post->updated_at = $date->getTimestamp();
+        $post->beforeSave($post);
         $post->save();
 
         return $post->serializeToArray();
@@ -65,4 +64,6 @@ class PostController extends Controller
         return $result;
 
     }
+
+
 }

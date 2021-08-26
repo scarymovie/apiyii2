@@ -27,4 +27,19 @@ class Post extends BasePost
         return $serializedData;
     }
 
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        if (empty($this->created_at) && (empty($this->updated_at)) && $insert) {
+            $this->created_at = time();
+            $this->updated_at = time();
+        }
+        $this->updated_at = time();
+        $this->created_at = time();
+        return true;
+
+    }
+
 }
