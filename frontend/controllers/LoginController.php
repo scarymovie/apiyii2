@@ -4,22 +4,28 @@ namespace frontend\controllers;
 
 use common\models\User;
 use yii\rest\Controller;
+use yii\validators\SafeValidator;
+
 
 class LoginController extends Controller
 {
 
     public function actionLogin()
     {
-        $username = \Yii::$app->request->post('username');
-        $password = \Yii::$app->request->post('password');
 
-        $user = User::find()->where(['username' => $username])->one() and !empty($password)
-        and $user->validatePassword($password);
+        $user = new User();
+        $user->load(\Yii::$app->request->post(), '');
+        if ($user->validate()){
+            $user = User::find()->where(['username' => $user->username])->one()
+            and !empty($user->password_hash)
+            and $user->validatePassword($user->password_hash);
+            $user->beforeSave($user);
+            $user->save();
 
-        $user->generateAccessToken();
-        $user->save();
-
-        return $user->serializeToArray();
+            return $user->serializeToArray();
+        } else {
+            return $erros = $user->errors;
+        }
     }
 
 }

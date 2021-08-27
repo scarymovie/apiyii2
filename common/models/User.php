@@ -249,4 +249,14 @@ class User extends BaseUser implements IdentityInterface
         return true;
 
     }
+
+    public function rules()
+    {
+        return [
+          [['username'], 'required']
+        ];
+
+    }
+
+
 }

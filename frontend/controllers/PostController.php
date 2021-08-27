@@ -39,13 +39,18 @@ class PostController extends Controller
         $post = new Post();
         $user = new User();
         $post->load(\Yii::$app->request->post(), '');
-        $user = $user->findIdentityByAccessToken(Yii::$app->request->post('access_token'), $type = null);
-        $userId = $user->id;
-        $post->created_by = $userId;
-        $post->beforeSave($post);
-        $post->save();
+        if ($post->validate()){
+            $user = $user->findIdentityByAccessToken(Yii::$app->request->post('access_token'), $type = null);
+            $userId = $user->id;
+            $post->created_by = $userId;
+            $post->beforeSave($post);
+            $post->save();
 
-        return $post->serializeToArray();
+            return $post->serializeToArray();
+        } else {
+            return $errors = $post->errors;
+        }
+
 
     }
 
