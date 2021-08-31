@@ -18,7 +18,6 @@ use yii\web\IdentityInterface;
  * @property string $verification_token
  * @property string $email
  * @property string $auth_key
- * @property string $access_token
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
@@ -237,26 +236,12 @@ class User extends BaseUser implements IdentityInterface
 
     public function beforeSave($insert)
     {
-        if (!parent::beforeSave($insert)) {
-            return false;
-        }
-        if (empty($this->created_at) && (empty($this->updated_at)) && $insert) {
+        if (empty($this->created_at)) {
             $this->created_at = time();
-            $this->updated_at = time();
         }
         $this->updated_at = time();
-        $this->created_at = time();
+
         return true;
 
     }
-
-    public function rules()
-    {
-        return [
-          [['username'], 'required']
-        ];
-
-    }
-
-
 }

@@ -7,20 +7,13 @@ use yii\db\BatchQueryResult;
 
 class Post extends BasePost
 {
-    public function rules()
-    {
-        return [
-            ['title','unique'],
-            [['title', 'body'], 'required']
-        ];
-    }
-
 
     public function serializeToArray()
     {
         $serializedData = [];
         $serializedData['postId'] = $this->id;
         $serializedData['title'] = $this->title;
+        $serializedData['body'] = $this->body;
         $serializedData['createdBy'] = $this->created_by;
 
         return $serializedData;
@@ -31,12 +24,11 @@ class Post extends BasePost
         if (!parent::beforeSave($insert)) {
             return false;
         }
-        if (empty($this->created_at) && (empty($this->updated_at)) && $insert) {
+        if (empty($this->created_at)) {
             $this->created_at = time();
-            $this->updated_at = time();
         }
         $this->updated_at = time();
-        $this->created_at = time();
+
         return true;
 
     }

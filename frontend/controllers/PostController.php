@@ -13,43 +13,78 @@ use yii\db\Query;
 
 class PostController extends Controller
 {
-
     public function actionMyPosts()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $user = new User();
-        $user = $user->findIdentityByAccessToken(Yii::$app->request->get('access_token'), $type = null);
-        $userId = $user->id;
-        $postQuery = Post::find()->where(['created_by' => $userId])->limit(10)->offset(0);
 
-        $result = [];
+        $access_token = Yii::$app->request->get('access_token');
+        $limit = Yii::$app->request->get('limit');
+        $offset = Yii::$app->request->get('offset');
 
-        foreach ($postQuery->each() as $post) {
-            $result[] = $post->serializeToArray();
+        if (!empty($access_token)) {
+            $user = new User();
+            $user = $user->findIdentityByAccessToken($access_token);
+            $userId = $user->id;
+        } else {
+            return [
+                'error' => 'User not found',
+            ];
         }
 
-        return $result;
+        $postQuery = Post::find()
+            ->andWhere(['created_by' => $userId])
+            ->limit($limit)
+            ->offset($offset);
 
+        if (empty($postQuery)) {
+            return [
+                'error' => 'Пост не найден',
+            ];
+        } else {
+            $result = [];
+
+            foreach ($postQuery->each() as $post) {
+                $result[] = $post->serializeToArray();
+            }
+            return $result;
+        }
     }
 
     public function actionCreate()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $date = new DateTime();
-        $post = new Post();
-        $user = new User();
-        $post->load(\Yii::$app->request->post(), '');
-        if ($post->validate()){
-            $user = $user->findIdentityByAccessToken(Yii::$app->request->post('access_token'), $type = null);
+
+        $title = Yii::$app->request->post('title');
+        $body = Yii::$app->request->post('body');
+        $access_token = Yii::$app->request->post('access_token');
+
+        if (!empty($access_token)) {
+            $post = new Post();
+            $user = new User();
+            $user = $user->findIdentityByAccessToken($access_token);
+            $userId = $user->id;
+            $post->body = $body;
+            $post->title = $title;
+            $post->created_by = $userId;
+            $post->save();
+            return $post->serializeToArray();
+        } else {
+            return [
+                'error' => 'User not found',
+            ];
+        }
+
+
+       /* if ($post->validate()) {
+            $user = $user->findIdentityByAccessToken($access_token);
             $userId = $user->id;
             $post->created_by = $userId;
-            $post->beforeSave($post);
             $post->save();
 
             return $post->serializeToArray();
         } else {
             return $errors = $post->errors;
-        }
+        }*/
 
 
     }
@@ -61,14 +96,14 @@ class PostController extends Controller
 
         $result = [];
 
-        foreach ($postQuery->each() as $post)
-        {
+        foreach ($postQuery->each() as $post) {
             $result[] = $post->serializeToArray();
         }
 
         return $result;
 
     }
+
 
 
 }

@@ -9,23 +9,47 @@ use yii\validators\SafeValidator;
 
 class LoginController extends Controller
 {
+    public function rules()
+    {
+        return [
+            // username and password are both required
+            [['username', 'password'], 'required'],
+            // password is validated by validatePassword()
+            ['password', 'validatePassword'],
+        ];
+    }
 
     public function actionLogin()
     {
 
-        $user = new User();
-        $user->load(\Yii::$app->request->post(), '');
-        if ($user->validate()){
-            $user = User::find()->where(['username' => $user->username])->one()
-            and !empty($user->password_hash)
-            and $user->validatePassword($user->password_hash);
-            $user->beforeSave($user);
-            $user->save();
+        $username = (\Yii::$app->request->post('username'));
+        $password = (\Yii::$app->request->post('password'));
 
-            return $user->serializeToArray();
-        } else {
-            return $erros = $user->errors;
+        $user = User::find()
+            ->andWhere(['username' => $username])
+            ->one();
+
+        if (empty($user)) {
+            return [
+                'error' => 'User not found',
+            ];
         }
+
+        if (!$user->validatePassword($password)) {
+            return [
+                'error' => 'Wrong password',
+            ];
+        }
+
+        if (!$user->save()) {
+            return $user->getErrors();
+        }
+
+        return [
+            'user' => $user->serializeToArray(),
+            'accessToken' => $user->access_token,
+        ];
+
     }
 
 }
