@@ -31,10 +31,4 @@ class PostQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
-
-
-/*    public function each($batchSize = 100, $db = null): \yii\db\BatchQueryResult
-    {
-        return parent::each($db);
-    }*/
 }

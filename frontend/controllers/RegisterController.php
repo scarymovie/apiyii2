@@ -16,7 +16,7 @@ class RegisterController extends Controller
 
         $model = new RegisterForm();
         $model->load(\Yii::$app->request->post(), '');
-        if ($model->validate() && $model->loginByUsername()) {
+        if ($model->validate() && $model->regByUsername()) {
             return $model->serializeToArray();
         } else {
             return $model->getErrors();

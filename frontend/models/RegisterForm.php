@@ -37,14 +37,11 @@ class RegisterForm extends Model
         ];
     }
 
-    public function loginByUsername()
+    public function regByUsername()
     {
         if (!$this->validate()) {
             return $this->getErrors();
-        }
-
-        $this->validate($this->username);
-
+        };
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;

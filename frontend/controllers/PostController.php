@@ -2,11 +2,12 @@
 
 namespace frontend\controllers;
 
-use Cassandra\Date;
 use common\models\Post;
 use common\models\BasePost;
 use common\models\User;
-use DateTime;
+use frontend\models\ListPostForm;
+use frontend\models\MyPostListForm;
+use frontend\models\CreatePostForm;
 use Yii;
 use yii\web\Controller;
 use yii\db\Query;
@@ -17,36 +18,13 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $access_token = Yii::$app->request->get('access_token');
-        $limit = Yii::$app->request->get('limit');
-        $offset = Yii::$app->request->get('offset');
+        $model = new MyPostListForm();
+        $model->load(\Yii::$app->request->get(), '');
 
-        if (!empty($access_token)) {
-            $user = new User();
-            $user = $user->findIdentityByAccessToken($access_token);
-            $userId = $user->id;
+        if ($model->validate() && $model->myPosts()) {
+            return $model->serializeToArray();
         } else {
-            return [
-                'error' => 'User not found',
-            ];
-        }
-
-        $postQuery = Post::find()
-            ->andWhere(['created_by' => $userId])
-            ->limit($limit)
-            ->offset($offset);
-
-        if (empty($postQuery)) {
-            return [
-                'error' => 'Пост не найден',
-            ];
-        } else {
-            $result = [];
-
-            foreach ($postQuery->each() as $post) {
-                $result[] = $post->serializeToArray();
-            }
-            return $result;
+            return $model->getErrors();
         }
     }
 
@@ -54,56 +32,31 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $title = Yii::$app->request->post('title');
-        $body = Yii::$app->request->post('body');
-        $access_token = Yii::$app->request->post('access_token');
+        $model = new CreatePostForm();
+        $model->load(\Yii::$app->request->post(), '');
 
-        if (!empty($access_token)) {
-            $post = new Post();
-            $user = new User();
-            $user = $user->findIdentityByAccessToken($access_token);
-            $userId = $user->id;
-            $post->body = $body;
-            $post->title = $title;
-            $post->created_by = $userId;
-            $post->save();
-            return $post->serializeToArray();
+        if ($model->validate() && $model->createPost()) {
+            return $model->serializeToArray();
         } else {
-            return [
-                'error' => 'User not found',
-            ];
+            return $model->getErrors();
         }
-
-
-       /* if ($post->validate()) {
-            $user = $user->findIdentityByAccessToken($access_token);
-            $userId = $user->id;
-            $post->created_by = $userId;
-            $post->save();
-
-            return $post->serializeToArray();
-        } else {
-            return $errors = $post->errors;
-        }*/
-
-
     }
 
     public function actionListPost()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $postQuery = Post::find()->limit(10)->offset(0);
 
-        $result = [];
+        $model = new ListPostForm();
+        $model->load(\Yii::$app->request->get(), '');
 
-        foreach ($postQuery->each() as $post) {
-            $result[] = $post->serializeToArray();
+        if ($model->validate() && $model->listPost()) {
+            return $model->serializeToArray();
+        } else {
+            return $model->getErrors();
         }
 
-        return $result;
 
     }
-
 
 
 }

@@ -3,26 +3,29 @@
 namespace frontend\controllers;
 
 use common\models\User;
+use frontend\models\LoginForm;
 use yii\rest\Controller;
 use yii\validators\SafeValidator;
 
 
 class LoginController extends Controller
 {
-    public function rules()
-    {
-        return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
-        ];
-    }
 
     public function actionLogin()
     {
 
-        $username = (\Yii::$app->request->post('username'));
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $model = new LoginForm();
+        $model->load(\Yii::$app->request->post(), '');
+        if ($model->validate() && $model->loginByUsername()) {
+            return $model->serializeToArray();
+        } else {
+            return $model->getErrors();
+        }
+
+
+        /*$username = (\Yii::$app->request->post('username'));
         $password = (\Yii::$app->request->post('password'));
 
         $user = User::find()
@@ -48,7 +51,7 @@ class LoginController extends Controller
         return [
             'user' => $user->serializeToArray(),
             'accessToken' => $user->access_token,
-        ];
+        ];*/
 
     }
 

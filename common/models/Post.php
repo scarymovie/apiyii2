@@ -21,9 +21,6 @@ class Post extends BasePost
 
     public function beforeSave($insert)
     {
-        if (!parent::beforeSave($insert)) {
-            return false;
-        }
         if (empty($this->created_at)) {
             $this->created_at = time();
         }
