@@ -11,6 +11,7 @@ class ListPostForm extends Model
     public $postQuery;
     public $limit;
     public $offset;
+
     public function rules()
     {
         return [
@@ -18,6 +19,7 @@ class ListPostForm extends Model
             ['offset', 'integer'],
         ];
     }
+
     public function listPost()
     {
         $this->postQuery = Post::find()->limit($this->limit)->offset($this->offset);
@@ -33,7 +35,7 @@ class ListPostForm extends Model
     public function serializeToArray()
     {
         $serializedData = [];
-       foreach ($this->postQuery->each() as $post) {
+        foreach ($this->postQuery->each() as $post) {
             $serializedData[] = $post->serializeToArray();
         }
         return $serializedData;
