@@ -2,11 +2,8 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
 use frontend\models\RegisterForm;
-use Yii;
 use yii\rest\Controller;
-use yii\web\JsonResponseFormatter;
 
 class RegisterController extends Controller
 {

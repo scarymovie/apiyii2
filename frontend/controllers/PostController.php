@@ -2,15 +2,10 @@
 
 namespace frontend\controllers;
 
-use common\models\Post;
-use common\models\BasePost;
-use common\models\User;
 use frontend\models\PostListForm;
 use frontend\models\PostMyList;
 use frontend\models\PostCreate;
-use Yii;
 use yii\web\Controller;
-use yii\db\Query;
 
 class PostController extends Controller
 {
