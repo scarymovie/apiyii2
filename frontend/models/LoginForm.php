@@ -10,6 +10,7 @@ class LoginForm extends Model
 {
     public $username;
     public $password;
+    public $user;
 
     public function rules()
     {
@@ -28,36 +29,29 @@ class LoginForm extends Model
         if (!$this->validate()) {
             return $this->getErrors();
         };
-        $user = User::find()
+        $this->user = User::find()
             ->andWhere(['username' => $this->username])
             ->one();
 
-        if (empty($user)) {
-            return [
-                'error' => 'User not found',
-            ];
+        if (empty($this->user)) {
+            return $this->getErrors();
         }
 
-        if (!$user->validatePassword($this->password)) {
-            return [
-                'error' => 'Wrong password',
-            ];
+        if (!$this->user->validatePassword($this->password)) {
+            return $this->getErrors();
         }
-        if (!$user->save()) {
-            return $user->getErrors();
+        if (!$this->user->save()) {
+            return $this->user->getErrors();
+        } else {
+            return true;
         }
-
-        return [
-            'user' => $user->serializeToArray(),
-            'accessToken' => $user->access_token,
-        ];
-
     }
 
     public function serializeToArray()
     {
         $serializedData = [];
         $serializedData['username'] = $this->username;
+        $serializedData['access_token'] = $this->user->access_token;
 
         return $serializedData;
     }

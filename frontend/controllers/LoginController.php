@@ -13,7 +13,6 @@ class LoginController extends Controller
 
     public function actionLogin()
     {
-
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         $model = new LoginForm();
@@ -23,36 +22,6 @@ class LoginController extends Controller
         } else {
             return $model->getErrors();
         }
-
-
-        /*$username = (\Yii::$app->request->post('username'));
-        $password = (\Yii::$app->request->post('password'));
-
-        $user = User::find()
-            ->andWhere(['username' => $username])
-            ->one();
-
-        if (empty($user)) {
-            return [
-                'error' => 'User not found',
-            ];
-        }
-
-        if (!$user->validatePassword($password)) {
-            return [
-                'error' => 'Wrong password',
-            ];
-        }
-
-        if (!$user->save()) {
-            return $user->getErrors();
-        }
-
-        return [
-            'user' => $user->serializeToArray(),
-            'accessToken' => $user->access_token,
-        ];*/
-
     }
 
 }
