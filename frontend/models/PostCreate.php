@@ -6,7 +6,7 @@ use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
-class CreatePostForm extends Model
+class PostCreate extends Model
 {
     public $title;
     public $body;

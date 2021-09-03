@@ -6,7 +6,7 @@ use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
-class MyPostListForm extends Model
+class PostMyList extends Model
 {
     public $access_token;
     public $postQuery;

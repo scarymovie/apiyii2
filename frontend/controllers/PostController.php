@@ -5,9 +5,9 @@ namespace frontend\controllers;
 use common\models\Post;
 use common\models\BasePost;
 use common\models\User;
-use frontend\models\ListPostForm;
-use frontend\models\MyPostListForm;
-use frontend\models\CreatePostForm;
+use frontend\models\PostListForm;
+use frontend\models\PostMyList;
+use frontend\models\PostCreate;
 use Yii;
 use yii\web\Controller;
 use yii\db\Query;
@@ -18,7 +18,7 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $model = new MyPostListForm();
+        $model = new PostMyList();
         $model->load(\Yii::$app->request->get(), '');
 
         if ($model->validate() && $model->myPosts()) {
@@ -32,7 +32,7 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $model = new CreatePostForm();
+        $model = new PostCreate();
         $model->load(\Yii::$app->request->post(), '');
 
         if ($model->validate() && $model->createPost()) {
@@ -46,7 +46,7 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $model = new ListPostForm();
+        $model = new PostListForm();
         $model->load(\Yii::$app->request->get(), '');
 
         if ($model->validate() && $model->listPost()) {

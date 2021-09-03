@@ -5,7 +5,7 @@ namespace frontend\models;
 use common\models\Post;
 use yii\base\Model;
 
-class ListPostForm extends Model
+class PostListForm extends Model
 {
 
     public $postQuery;
