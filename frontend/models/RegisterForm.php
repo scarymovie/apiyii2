@@ -49,7 +49,7 @@ class RegisterForm extends Model
         $user->generateAuthKey();
         $user->generateAccessToken();
         $user->generateEmailVerificationToken();
-        $user->beforeSave($user);
+        $user->beforeSave($user);// don`t work w/o this string
         if (!$user->save()) {
             return $user->getErrors();
         } else {

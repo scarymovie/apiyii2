@@ -29,7 +29,6 @@ class PostListForm extends Model
         } else {
             return true;
         }
-        return true;
     }
 
     public function serializeToArray()
