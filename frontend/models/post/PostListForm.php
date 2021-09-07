@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\post;
 
 use common\models\Post;
 use yii\base\Model;
@@ -22,13 +22,20 @@ class PostListForm extends Model
 
     public function listPost()
     {
-        $this->postQuery = Post::find()->limit($this->limit)->offset($this->offset);
+        if (!$this->validate()) {
+            $this->addError('', 'Введены некорректные данные');
+            return false;
+        }
+
+        $this->postQuery = Post::find()
+            ->limit($this->limit)
+            ->offset($this->offset);
 
         if (empty($this->postQuery)) {
-            $this->getErrors();
-        } else {
-            return true;
+            $this->addError('post', 'Post not found');
+            return false;
         }
+        return true;
     }
 
     public function serializeToArray()

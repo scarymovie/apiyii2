@@ -17,13 +17,14 @@ class Post extends BasePost
 
     public function beforeSave($insert)
     {
-        if (empty($this->created_at)) {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        if (empty($this->created_at) && $insert) {
             $this->created_at = time();
         }
         $this->updated_at = time();
-
         return true;
-
     }
 
 }

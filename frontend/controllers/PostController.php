@@ -2,9 +2,9 @@
 
 namespace frontend\controllers;
 
-use frontend\models\PostListForm;
-use frontend\models\PostMyList;
-use frontend\models\PostCreate;
+use frontend\models\post\PostListForm;
+use frontend\models\post\MyPostListForm;
+use frontend\models\post\CreatePostForm;
 use yii\web\Controller;
 
 class PostController extends Controller
@@ -13,10 +13,10 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $model = new PostMyList();
+        $model = new MyPostListForm();
         $model->load(\Yii::$app->request->get(), '');
 
-        if ($model->validate() && $model->myPosts()) {
+        if ($model->prepareMyPosts()) {
             return $model->serializeToArray();
         } else {
             return $model->getErrors();
@@ -27,10 +27,10 @@ class PostController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $model = new PostCreate();
+        $model = new CreatePostForm();
         $model->load(\Yii::$app->request->post(), '');
 
-        if ($model->validate() && $model->createPost()) {
+        if ($model->createPost()) {
             return $model->serializeToArray();
         } else {
             return $model->getErrors();
@@ -44,7 +44,7 @@ class PostController extends Controller
         $model = new PostListForm();
         $model->load(\Yii::$app->request->get(), '');
 
-        if ($model->validate() && $model->listPost()) {
+        if ($model->listPost()) {
             return $model->serializeToArray();
         } else {
             return $model->getErrors();

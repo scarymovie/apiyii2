@@ -1,12 +1,12 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\post;
 
 use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
-class PostCreate extends Model
+class CreatePostForm extends Model
 {
     public $title;
     public $body;
@@ -33,20 +33,20 @@ class PostCreate extends Model
     public function createPost()
     {
         if (!$this->validate()) {
-            return $this->getErrors();
+            $this->addError('', 'Введены некорректные данные');
+            return false;
         }
         $post = new Post();
-        $user = new User();
-        $user = $user->findIdentityByAccessToken($this->access_token);
+        $user = User::findIdentityByAccessToken($this->access_token);
         $userId = $user->id;
         $post->body = $this->body;
         $post->title = $this->title;
         $post->created_by = $userId;
         if (!$post->save()) {
-            return $user->getErrors();
-        } else {
-            return true;
+            $post->addErrors($post->getErrors());
+            return false;
         }
+        return true;
     }
 
     public function serializeToArray()

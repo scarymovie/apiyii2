@@ -1,23 +1,18 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\registration;
 
 use common\models\User;
 use Yii;
 use yii\base\Model;
 
-class RegisterForm extends Model
+class RegistrationForm extends Model
 {
     public $username;
     public $email;
     public $password;
-
     public $user;
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -37,25 +32,26 @@ class RegisterForm extends Model
         ];
     }
 
-    public function regByUsername()
+    public function registerUser()
     {
         if (!$this->validate()) {
-            return $this->getErrors();
-        };
+            $this->addError('', 'Введены некорректные данные');
+            return false;
+        }
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
-        $user->generateAuthKey();
         $user->generateAccessToken();
+        $user->generateAuthKey();
+        $user->beforeSave($user);
         $user->generateEmailVerificationToken();
-        $user->beforeSave($user);// don`t work w/o this string
         if (!$user->save()) {
-            return $user->getErrors();
-        } else {
-            return true;
+            $this->addErrors($user->getErrors());
+            return false;
         }
-
+        return true;
     }
 
     public function serializeToArray()

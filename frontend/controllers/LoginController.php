@@ -2,10 +2,8 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
-use frontend\models\LoginForm;
+use frontend\models\login\LoginByUsernameForm;
 use yii\rest\Controller;
-use yii\validators\SafeValidator;
 
 
 class LoginController extends Controller
@@ -15,9 +13,9 @@ class LoginController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $model = new LoginForm();
+        $model = new LoginByUsernameForm();
         $model->load(\Yii::$app->request->post(), '');
-        if ($model->validate() && $model->loginByUsername()) {
+        if ($model->login()) {
             return $model->serializeToArray();
         } else {
             return $model->getErrors();

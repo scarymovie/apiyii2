@@ -1,12 +1,12 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\post;
 
 use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
-class PostMyList extends Model
+class MyPostListForm extends Model
 {
     public $access_token;
     public $postQuery;
@@ -24,13 +24,19 @@ class PostMyList extends Model
         ];
     }
 
-    public function myPosts()
+    public function prepareMyPosts()
     {
         if (!$this->validate()) {
-            return $this->getErrors();
+            $this->addError('', 'Введены некорректные данные');
+            return false;
         }
-        $user = new User();
-        $user = $user->findIdentityByAccessToken($this->access_token);
+
+        $user = User::findIdentityByAccessToken($this->access_token);
+
+        if (empty($user)) {
+            $this->addError('access_token', 'User not found');
+            return false;
+        }
         $userId = $user->id;
 
         $this->postQuery = Post::find()
@@ -38,8 +44,9 @@ class PostMyList extends Model
             ->limit($this->limit)
             ->offset($this->offset);
 
-        if (empty($this->postQuery)) {
-            $this->getErrors();
+        if (empty($this->postQuery->one())) {
+            $this->addError('', 'Post not found');
+            return false;
         }
         return true;
     }

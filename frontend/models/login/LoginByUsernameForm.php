@@ -1,12 +1,12 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\login;
 
 use common\models\User;
 use Yii;
 use yii\base\Model;
 
-class LoginForm extends Model
+class LoginByUsernameForm extends Model
 {
     public $username;
     public $password;
@@ -24,27 +24,31 @@ class LoginForm extends Model
         ];
     }
 
-    public function loginByUsername()
+    public function login()
     {
         if (!$this->validate()) {
-            return $this->getErrors();
-        };
+            $this->addError('', 'Введены некорректные данные');
+            return false;
+        }
+
         $this->user = User::find()
             ->andWhere(['username' => $this->username])
             ->one();
 
         if (empty($this->user)) {
-            return $this->getErrors();
+            $this->addError('username', 'User not found');
+            return false;
         }
 
         if (!$this->user->validatePassword($this->password)) {
-            return $this->getErrors();
+            $this->addError('password', 'Incorrect password');
+            return false;
         }
         if (!$this->user->save()) {
-            return $this->user->getErrors();
-        } else {
-            return true;
+            $this->addErrors($this->user->getErrors());
+            return false;
         }
+            return true;
     }
 
     public function serializeToArray()
