@@ -48,7 +48,7 @@ class LoginByUsernameForm extends Model
             $this->addErrors($this->user->getErrors());
             return false;
         }
-            return true;
+        return true;
     }
 
     public function serializeToArray()

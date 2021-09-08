@@ -44,7 +44,7 @@ class MyPostListForm extends Model
             ->limit($this->limit)
             ->offset($this->offset);
 
-        if (empty($this->postQuery->one())) {
+        if (empty($this->postQuery->exists())) {
             $this->addError('', 'Post not found');
             return false;
         }
