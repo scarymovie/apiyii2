@@ -242,6 +242,9 @@ class User extends BaseUser implements IdentityInterface
         if (empty($this->created_at) && $insert) {
             $this->created_at = time();
         }
+        $this->generateAccessToken();
+
+        $this->generateEmailVerificationToken();
         $this->updated_at = time();
         return true;
     }

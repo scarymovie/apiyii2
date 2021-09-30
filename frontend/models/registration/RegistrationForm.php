@@ -43,10 +43,7 @@ class RegistrationForm extends Model
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
-        $user->generateAccessToken();
-        $user->generateAuthKey();
-        /*$user->beforeSave((bool)$user);*/
-        $user->generateEmailVerificationToken();
+        $user->generateAuthKey();//don`t work in model User
         if (!$user->save()) {
             $this->addErrors($user->getErrors());
             return false;
